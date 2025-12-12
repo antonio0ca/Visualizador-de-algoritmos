@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Visualizador de Algoritmos de Ordenação</h1>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algo-select">Algoritmo</label>
+                <select id="algo-select">
+                    <option value="bubble">Bubble Sort</option>
+                    <option value="selection">Selection Sort</option>
+                    <option value="insertion">Insertion Sort</option>
+                    <option value="merge">Merge Sort</option>
+                    <option value="quick">Quick Sort</option>
+                    <option value="java">Java Sort (Arrays.sort)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="speed-select">Velocidade</label>
+                <select id="speed-select">
+                    <option value="500">Lenta</option>
+                    <option value="100" selected>Normal</option>
+                    <option value="30">Rápida</option>
+                    <option value="5">Muito Rápida</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="size-input">Quantidade de Barras</label>
+                <input type="number" id="size-input" min="10" max="200" value="50">
+
+                <div class="control-group" style="margin-top: 10px;">
+                    <label for="virtual-size-input">Simular Tamanho Real (N)</label>
+                    <input type="number" id="virtual-size-input" value="10000" step="1000" min="100">
+                    <small style="font-size: 0.65rem; color: #666;">Ex: 10000, 1000000</small>
+                </div>
+
+                <div style="font-size: 0.7rem; color: #555; display: block; margin-top: 5px;">
+                    Visualizando: <span id="visual-count">50</span> barras
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button id="generate-btn" class="btn secondary">Gerar</button>
+                <button id="start-btn" class="btn primary">Ordenar</button>
+            </div>
+        </div>
+
+        <div class="visualization-container">
+            <div id="bars-container"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="label">Comparações:</span>
+                <span id="comp-count" class="value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">Trocas:</span>
+                <span id="swap-count" class="value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">Tempo Est. CPU:</span>
+                <span id="time-count" class="value">0s</span>
+            </div>
+        </div>
+
+        <div class="history-panel" style="margin-top: 20px; padding: 15px; border-top: 1px dotted #ccc;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="font-size: 1rem; text-transform: uppercase;">Histórico de Execuções</h3>
+                <button id="clear-history-btn" class="btn secondary"
+                    style="padding: 4px 8px; font-size: 0.7rem;">Limpar</button>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+                <thead>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <th style="padding: 5px;">#</th>
+                        <th style="padding: 5px;">Algo</th>
+                        <th style="padding: 5px;">Itens</th>
+                        <th style="padding: 5px;">Tempo</th>
+                    </tr>
+                </thead>
+                <tbody id="history-body">
+                    <!-- Linhas adicionadas via JS -->
+                </tbody>
+                <tfoot>
+                    <tr style="border-top: 2px solid #000;">
+                        <td colspan="3" style="padding: 8px; font-weight: bold;">Média:</td>
+                        <td id="history-avg" style="padding: 8px; font-weight: bold;">-</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
