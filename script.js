@@ -8,6 +8,7 @@ const algoSelect = document.getElementById('algo-select');
 const generateBtn = document.getElementById('generate-btn');
 const startBtn = document.getElementById('start-btn');
 const pauseBtn = document.getElementById('pause-btn');
+const finishBtn = document.getElementById('finish-btn');
 const compCountSpan = document.getElementById('comp-count');
 const swapCountSpan = document.getElementById('swap-count');
 const timeCountSpan = document.getElementById('time-count');
@@ -21,6 +22,7 @@ let bars = [];
 let delay = 100;
 let isSorting = false;
 let isPaused = false;
+let isSkipping = false;
 let comparisons = 0;
 let swaps = 0;
 let simulationNoise = 1;
@@ -56,6 +58,7 @@ function sleep(ms) {
 }
 
 async function delayStep() {
+    if (isSkipping) return;
     while (isPaused && isSorting) await sleep(60);
     await sleep(delay);
 }
@@ -438,11 +441,13 @@ async function runSort() {
     if (isSorting) return;
     isSorting = true;
     isPaused = false;
+    isSkipping = false;
     simulationNoise = 0.9 + Math.random() * 0.2;
 
     setControlsDisabled(true);
     pauseBtn.disabled = false;
     pauseBtn.innerText = 'Pausar';
+    finishBtn.disabled = false;
 
     bars.forEach(b => b.classList.remove('sorted', 'active', 'compare', 'pivot'));
     resetStats();
@@ -461,9 +466,11 @@ async function runSort() {
     } finally {
         isSorting = false;
         isPaused = false;
+        isSkipping = false;
         setControlsDisabled(false);
         pauseBtn.disabled = true;
         pauseBtn.innerText = 'Pausar';
+        finishBtn.disabled = true;
     }
 }
 
@@ -479,6 +486,15 @@ pauseBtn.addEventListener('click', () => {
     if (!isSorting) return;
     isPaused = !isPaused;
     pauseBtn.innerText = isPaused ? 'Continuar' : 'Pausar';
+});
+
+finishBtn.addEventListener('click', () => {
+    if (!isSorting) return;
+    isSkipping = true;
+    isPaused = false;
+    finishBtn.disabled = true;
+    pauseBtn.disabled = true;
+    pauseBtn.innerText = 'Pausar';
 });
 
 clearHistoryBtn.addEventListener('click', () => {
