@@ -2,7 +2,7 @@
 
 Aplicação web interativa que anima, passo a passo, o funcionamento dos principais algoritmos de ordenação. Feita com JavaScript puro (sem frameworks), HTML e CSS.
 
-Projeto desenvolvido na disciplina de Estrutura de Dados (FATEC).
+Projeto desenvolvido para a disciplina de Estrutura de Dados (FATEC).
 
 ## Demo
 
