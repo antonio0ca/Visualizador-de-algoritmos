@@ -1,18 +1,24 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizador</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>Visualizador de Algoritmos de Ordenação</title>
+    <meta name="description" content="Visualizador interativo de algoritmos de ordenação: bubble, selection, insertion, merge, quick, heap e shell sort.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="container">
         <header>
-            <h1>Visualizador de Algoritmos de Ordenação</h1>
+            <div class="title-row">
+                <h1>Visualizador de Algoritmos de Ordenação</h1>
+                <button id="theme-btn" class="icon-btn" title="Alternar tema" aria-label="Alternar tema">◐</button>
+            </div>
+            <p class="subtitle">Compare visualmente como cada algoritmo ordena os dados.</p>
         </header>
 
         <div class="controls">
@@ -22,9 +28,10 @@
                     <option value="bubble">Bubble Sort</option>
                     <option value="selection">Selection Sort</option>
                     <option value="insertion">Insertion Sort</option>
+                    <option value="shell">Shell Sort</option>
                     <option value="merge">Merge Sort</option>
                     <option value="quick">Quick Sort</option>
-                    <option value="java">Java Sort (Arrays.sort)</option>
+                    <option value="heap">Heap Sort</option>
                 </select>
             </div>
 
@@ -39,23 +46,39 @@
             </div>
 
             <div class="control-group">
-                <label for="size-input">Quantidade de Barras</label>
+                <label for="size-input">Quantidade de barras</label>
                 <input type="number" id="size-input" min="10" max="200" value="50">
-
-                <div class="control-group" style="margin-top: 10px;">
-                    <label for="virtual-size-input">Simular Tamanho Real (N)</label>
-                    <input type="number" id="virtual-size-input" value="10000" step="1000" min="100">
-                    <small style="font-size: 0.65rem; color: #666;">Ex: 10000, 1000000</small>
-                </div>
-
-                <div style="font-size: 0.7rem; color: #555; display: block; margin-top: 5px;">
-                    Visualizando: <span id="visual-count">50</span> barras
-                </div>
             </div>
 
-            <div class="buttons">
-                <button id="generate-btn" class="btn secondary">Gerar</button>
-                <button id="start-btn" class="btn primary">Ordenar</button>
+            <div class="control-group">
+                <label for="virtual-size-input">N simulado (estimativa)</label>
+                <input type="number" id="virtual-size-input" value="10000" step="1000" min="100">
+                <small class="hint">Projeta o tempo de CPU para um N grande.</small>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button id="generate-btn" class="btn">Gerar</button>
+            <button id="start-btn" class="btn primary">Ordenar</button>
+            <button id="pause-btn" class="btn" disabled>Pausar</button>
+        </div>
+
+        <div class="info-row">
+            <div class="legend" aria-label="Legenda das cores">
+                <span class="legend-item"><span class="swatch default"></span>Normal</span>
+                <span class="legend-item"><span class="swatch compare"></span>Comparando</span>
+                <span class="legend-item"><span class="swatch active"></span>Troca</span>
+                <span class="legend-item"><span class="swatch pivot"></span>Pivô</span>
+                <span class="legend-item"><span class="swatch sorted"></span>Ordenado</span>
+            </div>
+
+            <div class="complexity" id="complexity-panel">
+                <span class="cx-name" id="cx-name">Bubble Sort</span>
+                <span class="cx-item">Melhor <b id="cx-best">—</b></span>
+                <span class="cx-item">Média <b id="cx-avg">—</b></span>
+                <span class="cx-item">Pior <b id="cx-worst">—</b></span>
+                <span class="cx-item">Espaço <b id="cx-space">—</b></span>
+                <span class="cx-item">Estável <b id="cx-stable">—</b></span>
             </div>
         </div>
 
@@ -65,47 +88,48 @@
 
         <div class="stats">
             <div class="stat-item">
-                <span class="label">Comparações:</span>
+                <span class="label">Comparações</span>
                 <span id="comp-count" class="value">0</span>
             </div>
             <div class="stat-item">
-                <span class="label">Trocas:</span>
+                <span class="label">Trocas</span>
                 <span id="swap-count" class="value">0</span>
             </div>
             <div class="stat-item">
-                <span class="label">Tempo Est. CPU:</span>
+                <span class="label">Tempo est. de CPU (N simulado)</span>
                 <span id="time-count" class="value">0s</span>
             </div>
         </div>
 
-        <div class="history-panel" style="margin-top: 20px; padding: 15px; border-top: 1px dotted #ccc;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h3 style="font-size: 1rem; text-transform: uppercase;">Histórico de Execuções</h3>
-                <button id="clear-history-btn" class="btn secondary"
-                    style="padding: 4px 8px; font-size: 0.7rem;">Limpar</button>
+        <div class="history-panel">
+            <div class="history-head">
+                <h2>Histórico de execuções</h2>
+                <button id="clear-history-btn" class="btn small">Limpar</button>
             </div>
-
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+            <table>
                 <thead>
-                    <tr style="border-bottom: 1px solid #ddd;">
-                        <th style="padding: 5px;">#</th>
-                        <th style="padding: 5px;">Algo</th>
-                        <th style="padding: 5px;">Itens</th>
-                        <th style="padding: 5px;">Tempo</th>
+                    <tr>
+                        <th>#</th>
+                        <th>Algoritmo</th>
+                        <th>N simulado</th>
+                        <th>Tempo</th>
                     </tr>
                 </thead>
-                <tbody id="history-body">
-                    <!-- Linhas adicionadas via JS -->
-                </tbody>
+                <tbody id="history-body"></tbody>
                 <tfoot>
-                    <tr style="border-top: 2px solid #000;">
-                        <td colspan="3" style="padding: 8px; font-weight: bold;">Média:</td>
-                        <td id="history-avg" style="padding: 8px; font-weight: bold;">-</td>
+                    <tr>
+                        <td colspan="3">Média</td>
+                        <td id="history-avg">—</td>
                     </tr>
                 </tfoot>
             </table>
         </div>
+
+        <footer class="footer">
+            <span>O tempo de CPU é uma <b>estimativa</b> baseada na complexidade do algoritmo, não uma medição real.</span>
+        </footer>
     </div>
+
     <script src="script.js"></script>
 </body>
 
