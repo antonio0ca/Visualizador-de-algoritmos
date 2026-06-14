@@ -1,9 +1,9 @@
 :root {
-    --accent: #EC4899;
+    --accent: #0D9488;
     --on-accent: #ffffff;
     --bar-compare: #F59E0B;
-    --bar-active: #EC4899;
-    --bar-pivot: #0D9488;
+    --bar-active: #0D9488;
+    --bar-pivot: #6366F1;
     --bar-sorted: #10B981;
     --radius: 4px;
     --maxw: 920px;
@@ -287,7 +287,7 @@ tbody tr { border-bottom: 1px solid var(--line); }
 tbody .empty { text-align: center; color: var(--muted); padding: 18px; }
 tfoot td { border-top: 2px solid var(--ink); font-weight: 600; padding-top: 12px; }
 .time-best { color: var(--bar-sorted); }
-.time-worst { color: var(--bar-active); }
+.time-worst { color: var(--bar-compare); }
 
 .footer {
     margin-top: 40px;
