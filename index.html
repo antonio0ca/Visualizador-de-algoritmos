@@ -1,28 +1,30 @@
 <!DOCTYPE html>
-<html lang="pt-br" data-theme="dark">
+<html lang="pt-br" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visualizador de Algoritmos de Ordenação</title>
-    <meta name="description" content="Visualizador interativo de algoritmos de ordenação: bubble, selection, insertion, merge, quick, heap e shell sort.">
+    <meta name="description" content="Visualizador interativo e elegante de algoritmos de ordenação: bubble, selection, insertion, shell, merge, quick e heap sort.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <div class="title-row">
-                <h1>Visualizador de Algoritmos de Ordenação</h1>
-                <button id="theme-btn" class="icon-btn" title="Alternar tema" aria-label="Alternar tema">◐</button>
+    <main class="container">
+        <header class="masthead">
+            <div class="masthead-text">
+                <span class="eyebrow">Estrutura de Dados &middot; FATEC</span>
+                <h1>Algoritmos de <em>Ordenação</em></h1>
+                <p class="lede">Veja, passo a passo, como cada algoritmo organiza os dados — e entenda quando usar cada um.</p>
             </div>
-            <p class="subtitle">Compare visualmente como cada algoritmo ordena os dados.</p>
+            <button id="theme-btn" class="ghost-btn" title="Alternar tema" aria-label="Alternar tema claro/escuro">Tema</button>
         </header>
 
-        <div class="controls">
-            <div class="control-group">
+        <section class="controls" aria-label="Controles">
+            <div class="field">
                 <label for="algo-select">Algoritmo</label>
                 <select id="algo-select">
                     <option value="bubble">Bubble Sort</option>
@@ -34,36 +36,48 @@
                     <option value="heap">Heap Sort</option>
                 </select>
             </div>
-
-            <div class="control-group">
+            <div class="field">
                 <label for="speed-select">Velocidade</label>
                 <select id="speed-select">
                     <option value="500">Lenta</option>
                     <option value="100" selected>Normal</option>
                     <option value="30">Rápida</option>
-                    <option value="5">Muito Rápida</option>
+                    <option value="5">Muito rápida</option>
                 </select>
             </div>
-
-            <div class="control-group">
-                <label for="size-input">Quantidade de barras</label>
+            <div class="field">
+                <label for="size-input">Barras</label>
                 <input type="number" id="size-input" min="10" max="200" value="50">
             </div>
-
-            <div class="control-group">
-                <label for="virtual-size-input">N simulado (estimativa)</label>
+            <div class="field">
+                <label for="virtual-size-input">N simulado</label>
                 <input type="number" id="virtual-size-input" value="10000" step="1000" min="100">
-                <small class="hint">Projeta o tempo de CPU para um N grande.</small>
             </div>
-        </div>
+            <div class="actions">
+                <button id="generate-btn" class="btn">Gerar</button>
+                <button id="start-btn" class="btn primary">Ordenar</button>
+                <button id="pause-btn" class="btn" disabled>Pausar</button>
+            </div>
+        </section>
 
-        <div class="buttons">
-            <button id="generate-btn" class="btn">Gerar</button>
-            <button id="start-btn" class="btn primary">Ordenar</button>
-            <button id="pause-btn" class="btn" disabled>Pausar</button>
-        </div>
+        <section class="algo-note" aria-live="polite">
+            <div class="note-head">
+                <span class="eyebrow accent" id="cx-name">Bubble Sort</span>
+                <div class="complexity">
+                    <span>Melhor <b id="cx-best">—</b></span>
+                    <span>Média <b id="cx-avg">—</b></span>
+                    <span>Pior <b id="cx-worst">—</b></span>
+                    <span>Espaço <b id="cx-space">—</b></span>
+                    <span>Estável <b id="cx-stable">—</b></span>
+                </div>
+            </div>
+            <p class="note-desc" id="cx-desc">—</p>
+        </section>
 
-        <div class="info-row">
+        <section class="stage">
+            <div class="visualization-container">
+                <div id="bars-container"></div>
+            </div>
             <div class="legend" aria-label="Legenda das cores">
                 <span class="legend-item"><span class="swatch default"></span>Normal</span>
                 <span class="legend-item"><span class="swatch compare"></span>Comparando</span>
@@ -71,64 +85,51 @@
                 <span class="legend-item"><span class="swatch pivot"></span>Pivô</span>
                 <span class="legend-item"><span class="swatch sorted"></span>Ordenado</span>
             </div>
+        </section>
 
-            <div class="complexity" id="complexity-panel">
-                <span class="cx-name" id="cx-name">Bubble Sort</span>
-                <span class="cx-item">Melhor <b id="cx-best">—</b></span>
-                <span class="cx-item">Média <b id="cx-avg">—</b></span>
-                <span class="cx-item">Pior <b id="cx-worst">—</b></span>
-                <span class="cx-item">Espaço <b id="cx-space">—</b></span>
-                <span class="cx-item">Estável <b id="cx-stable">—</b></span>
+        <section class="stats">
+            <div class="stat">
+                <span class="stat-label">Comparações</span>
+                <span id="comp-count" class="stat-value">0</span>
             </div>
-        </div>
+            <div class="stat">
+                <span class="stat-label">Trocas</span>
+                <span id="swap-count" class="stat-value">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Tempo est. de CPU</span>
+                <span id="time-count" class="stat-value">0s</span>
+            </div>
+        </section>
 
-        <div class="visualization-container">
-            <div id="bars-container"></div>
-        </div>
-
-        <div class="stats">
-            <div class="stat-item">
-                <span class="label">Comparações</span>
-                <span id="comp-count" class="value">0</span>
-            </div>
-            <div class="stat-item">
-                <span class="label">Trocas</span>
-                <span id="swap-count" class="value">0</span>
-            </div>
-            <div class="stat-item">
-                <span class="label">Tempo est. de CPU (N simulado)</span>
-                <span id="time-count" class="value">0s</span>
-            </div>
-        </div>
-
-        <div class="history-panel">
+        <section class="history">
             <div class="history-head">
-                <h2>Histórico de execuções</h2>
-                <button id="clear-history-btn" class="btn small">Limpar</button>
+                <span class="eyebrow">Histórico de execuções</span>
+                <button id="clear-history-btn" class="ghost-btn small">Limpar</button>
             </div>
             <table>
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Algoritmo</th>
-                        <th>N simulado</th>
-                        <th>Tempo</th>
+                        <th class="num">N simulado</th>
+                        <th class="num">Tempo</th>
                     </tr>
                 </thead>
                 <tbody id="history-body"></tbody>
                 <tfoot>
                     <tr>
                         <td colspan="3">Média</td>
-                        <td id="history-avg">—</td>
+                        <td id="history-avg" class="num">—</td>
                     </tr>
                 </tfoot>
             </table>
-        </div>
+        </section>
 
         <footer class="footer">
-            <span>O tempo de CPU é uma <b>estimativa</b> baseada na complexidade do algoritmo, não uma medição real.</span>
+            O tempo de CPU é uma estimativa baseada na complexidade do algoritmo, não uma medição real.
         </footer>
-    </div>
+    </main>
 
     <script src="script.js"></script>
 </body>

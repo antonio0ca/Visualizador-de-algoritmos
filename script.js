@@ -29,13 +29,13 @@ let executionHistory = [];
 
 // ---------- Complexidade (Big-O) ----------
 const COMPLEXITY = {
-    bubble:    { name: 'Bubble Sort',    best: 'O(n)',       avg: 'O(n²)',      worst: 'O(n²)',      space: 'O(1)',     stable: 'Sim' },
-    selection: { name: 'Selection Sort', best: 'O(n²)',      avg: 'O(n²)',      worst: 'O(n²)',      space: 'O(1)',     stable: 'Não' },
-    insertion: { name: 'Insertion Sort', best: 'O(n)',       avg: 'O(n²)',      worst: 'O(n²)',      space: 'O(1)',     stable: 'Sim' },
-    shell:     { name: 'Shell Sort',     best: 'O(n log n)', avg: 'O(n^1.25)',  worst: 'O(n²)',      space: 'O(1)',     stable: 'Não' },
-    merge:     { name: 'Merge Sort',     best: 'O(n log n)', avg: 'O(n log n)', worst: 'O(n log n)', space: 'O(n)',     stable: 'Sim' },
-    quick:     { name: 'Quick Sort',     best: 'O(n log n)', avg: 'O(n log n)', worst: 'O(n²)',      space: 'O(log n)', stable: 'Não' },
-    heap:      { name: 'Heap Sort',      best: 'O(n log n)', avg: 'O(n log n)', worst: 'O(n log n)', space: 'O(1)',     stable: 'Não' },
+    bubble:    { name: 'Bubble Sort',    best: 'O(n)',       avg: 'O(n²)',      worst: 'O(n²)',      space: 'O(1)',     stable: 'Sim', desc: 'Apenas didático. Simples de entender, mas O(n²): evite em produção. Serve para ensinar a ideia de ordenação ou em listas minúsculas.' },
+    selection: { name: 'Selection Sort', best: 'O(n²)',      avg: 'O(n²)',      worst: 'O(n²)',      space: 'O(1)',     stable: 'Não', desc: 'Faz o mínimo de trocas possível (O(n)). Útil quando escrever na memória é caro, mas continua O(n²) em comparações.' },
+    insertion: { name: 'Insertion Sort', best: 'O(n)',       avg: 'O(n²)',      worst: 'O(n²)',      space: 'O(1)',     stable: 'Sim', desc: 'Excelente para listas pequenas ou quase ordenadas (O(n) no melhor caso). É a base de algoritmos híbridos como o Timsort.' },
+    shell:     { name: 'Shell Sort',     best: 'O(n log n)', avg: 'O(n^1.25)',  worst: 'O(n²)',      space: 'O(1)',     stable: 'Não', desc: 'Insertion sort com saltos decrescentes. Bom meio-termo para listas médias, in-place e sem a memória extra do merge.' },
+    merge:     { name: 'Merge Sort',     best: 'O(n log n)', avg: 'O(n log n)', worst: 'O(n log n)', space: 'O(n)',     stable: 'Sim', desc: 'Estável e com desempenho garantido O(n log n). Ideal para grandes volumes, ordenação externa e listas ligadas, em troca de O(n) de memória.' },
+    quick:     { name: 'Quick Sort',     best: 'O(n log n)', avg: 'O(n log n)', worst: 'O(n²)',      space: 'O(log n)', stable: 'Não', desc: 'Rápido na média e in-place: a escolha padrão de uso geral. Cuidado: com pivôs ruins pode degradar para O(n²).' },
+    heap:      { name: 'Heap Sort',      best: 'O(n log n)', avg: 'O(n log n)', worst: 'O(n log n)', space: 'O(1)',     stable: 'Não', desc: 'O(n log n) garantido até no pior caso e in-place. Ótimo quando se precisa de tempo previsível e pouca memória; não é estável.' },
 };
 
 const QUADRATIC = ['bubble', 'selection', 'insertion'];
@@ -154,6 +154,7 @@ function updateComplexityPanel() {
     document.getElementById('cx-worst').innerText = c.worst;
     document.getElementById('cx-space').innerText = c.space;
     document.getElementById('cx-stable').innerText = c.stable;
+    document.getElementById('cx-desc').innerText = c.desc;
 }
 
 // ---------- Histórico ----------
@@ -487,7 +488,7 @@ clearHistoryBtn.addEventListener('click', () => {
 
 // ---------- Inicialização ----------
 document.addEventListener('DOMContentLoaded', () => {
-    applyTheme(localStorage.getItem('@viz:theme') || 'dark');
+    applyTheme(localStorage.getItem('@viz:theme') || 'light');
     delay = parseInt(speedSelect.value);
     updateComplexityPanel();
     generateArray();
